@@ -1,0 +1,28 @@
+{
+  "name": "news-update",
+  "version": "1.0.0",
+  "description": "App that scrapes stories from news outlet. Users can comment on displayed stories. Uses express, handlebars, mongoose, axios, cheerios.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allisonbardy/news-update.git"
+  },
+  "author": "allison",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allisonbardy/news-update/issues"
+  },
+  "homepage": "https://github.com/allisonbardy/news-update#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.16.4",
+    "handlebars": "^4.1.2",
+    "mongoose": "^5.5.7",
+    "morgan": "^1.9.1"
+  }
+}
