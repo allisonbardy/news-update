@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newsUpdate", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/newsScraper", { useNewUrlParser: true });
 
 // Routes
 
@@ -46,7 +46,7 @@ app.get("/scrape", function(req, res) {
             // Add the text and href of every link, and save them as properties of the result object
             result.title = $(this)
                 .children("a")
-                .text();
+                .text();            
             result.link = $(this)
                 .children("a")
                 .attr("href");
@@ -97,6 +97,26 @@ app.get("/articles/:id", function(req, res) {
         .catch(function(err) {
             res.json(err);
         });
+});
+
+app.patch("/articles/:id", function(req, res) {
+    var getid = req.params.id
+    console.log("GET FUNCTION ID IS: " + getid)
+        // TODO
+        // ====
+        // Finish the route so it finds one article using the req.params.id,
+        // and run the populate method with "note",
+        // then responds with the article with the note included
+        // db.Article.find({this.})
+    db.Article.findOneAndUpdate({ _id: getid }, { saved: req.body.saved })
+        .then(function(dbLibrary) {
+            res.json(dbLibrary);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
+
+
 });
 
 // app.get("/listnotes", function(req, res) {
