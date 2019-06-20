@@ -17,8 +17,6 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/newsScraper";
 
 mongoose.connect(MONGODB_URI);
 
-
-
 // Initialize Express
 var app = express();
 
@@ -37,8 +35,15 @@ app.use(express.static("public"));
 
 // Routes
 
-// A GET route for scraping the echoJS website
+app.get("/removeall", function(req, res){
+    db.Note.remove({})
+    .then(() => db.Article.remove({}))
+    .then(() => res.json("database-empty"))
+})
+
+// A GET route for scraping the website
 app.get("/scrape", function(req, res) {
+
     // First, we grab the body of the html with axios
     axios.get("http://www.brooklynblonde.com/").then(function(response) {
         // Then, we load that into cheerio and save it to $ for a shorthand selector
@@ -76,8 +81,8 @@ app.get("/scrape", function(req, res) {
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
-    // TODO: Finish the route so it grabs all of the articles
     db.Article.find({})
+        .populate("note")
         .then(function(dbLibrary) {
             res.json(dbLibrary);
         })
@@ -90,12 +95,7 @@ app.get("/articles", function(req, res) {
 app.get("/articles/:id", function(req, res) {
     var getid = req.params.id
     console.log("GET FUNCTION ID IS: " + getid)
-        // TODO
-        // ====
-        // Finish the route so it finds one article using the req.params.id,
-        // and run the populate method with "note",
-        // then responds with the article with the note included
-        // db.Article.find({this.})
+
     db.Article.find({ _id: getid })
         .then(function(dbLibrary) {
             res.json(dbLibrary);
@@ -108,12 +108,7 @@ app.get("/articles/:id", function(req, res) {
 app.patch("/articles/:id", function(req, res) {
     var getid = req.params.id
     console.log("GET FUNCTION ID IS: " + getid)
-        // TODO
-        // ====
-        // Finish the route so it finds one article using the req.params.id,
-        // and run the populate method with "note",
-        // then responds with the article with the note included
-        // db.Article.find({this.})
+
     db.Article.findOneAndUpdate({ _id: getid }, { saved: req.body.saved })
         .then(function(dbLibrary) {
             res.json(dbLibrary);
@@ -121,34 +116,24 @@ app.patch("/articles/:id", function(req, res) {
         .catch(function(err) {
             res.json(err);
         });
-
-
 });
 
 // app.get("/listnotes", function(req, res) {
-//     db.Note.find({})
-//         .then(function(dbLibrary) {
-//             res.json(dbLibrary);
-//         })
-//         .catch(function(err) {
-//             res.json(err);
-//         });
-// });
+    db.Note.find({})
+        .then(function(dbLibrary) {
+            res.json(dbLibrary);
+        })
+        .catch(function(err) {
+            res.json(err);
+        });
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
-    // TODO
-    // ====
-    // save the new note that gets posted to the Notes collection
-    // then find an article from the req.params.id
-    // and update it's "note" property with the _id of the new note
-    let localID = req.params.id;
-    // let testTitle = req.params.notetitle;
-    // console.log("Title is: " + testTitle);
 
+    let localID = req.params.id;
     db.Note.create(req.body)
-        .then(function() {
-            return db.Article.findOneAndUpdate({ _id: localID }, { $push: { note: localID } })
+        .then(function(newNote) {
+            return db.Article.findOneAndUpdate({ _id: localID }, { $push: { note: newNote._id } })
         });
 });
 

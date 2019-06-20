@@ -8,9 +8,13 @@ To scrape website: https://secret-plateau-30635.herokuapp.com/scrape
 
 Return to https://secret-plateau-30635.herokuapp.com/ to display scraped articles.
 
+When user clicks on article title or link, modal to add note will appear. User can then save note to database.
+
 User can save articles with "Save Article" button. 
 
-When user clicks on article title or link, modal to add note will appear. User can then save note to database.
+To view articles and saved notes: https://secret-plateau-30635.herokuapp.com/articles
+
+To delete all articles and associated notes: https://secret-plateau-30635.herokuapp.com/removeall
 
 # Demo
 
